@@ -1,5 +1,4 @@
-
-import { createServer } from "@vercel/node";
+// src/api.js
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
 import dotenv from "dotenv";
@@ -8,13 +7,11 @@ dotenv.config();
 
 let isConnected = false;
 
-async function handler(req, res) {
+export default async function handler(req, res) {
   if (!isConnected) {
     await connectDB();
     isConnected = true;
   }
 
-  return app(req, res); // forward to express
+  return app(req, res); // pass Express request to app
 }
-
-export default createServer(handler);
