@@ -1,19 +1,21 @@
+// server/index.js
 import { app } from "./app.js";
-import dotenv from "dotenv";
 import connectDB from "./db/index.js";
-import logger from "./utils/logger.js"; // Ensure logger is imported
+import dotenv from "dotenv";
 
-dotenv.config({ path: "./src/.env" });
+dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+let isConnected = false;
 
-// Start the server
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}.....`);
-    });
-  })
-  .catch((err) => {
-    logger.error("MongoDB connection error", err);
-  });
+async function prepareApp() {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+  return app;
+}
+
+export default async function handler(req, res) {
+  const preparedApp = await prepareApp();
+  return preparedApp(req, res); // Pass to Express
+}
