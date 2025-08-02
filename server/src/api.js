@@ -1,7 +1,7 @@
 // src/api.js
 import { app } from "./app.js";
-import connectDB from "./db/index.js";
 import dotenv from "dotenv";
+import connectDB from "./db/index.js";
 
 dotenv.config();
 
@@ -13,5 +13,5 @@ export default async function handler(req, res) {
     isConnected = true;
   }
 
-  return app(req, res); // pass Express request to app
+  return app(req, res); 
 }
