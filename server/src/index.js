@@ -1,7 +1,7 @@
-// server/index.js
+// src/index.js
 import { app } from "./app.js";
-import connectDB from "./db/index.js";
 import dotenv from "dotenv";
+import connectDB from "./db/index.js";
 
 dotenv.config();
 
@@ -17,5 +17,5 @@ async function prepareApp() {
 
 export default async function handler(req, res) {
   const preparedApp = await prepareApp();
-  return preparedApp(req, res); // Pass to Express
+  return preparedApp(req, res);
 }
