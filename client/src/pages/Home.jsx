@@ -6,6 +6,7 @@ import {
   toggleTask,
   deleteTask,
 } from "../store/slices/taskSlice";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -16,16 +17,36 @@ const Home = () => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  const handleAddTask = (e) => {
+  const handleAddTask = async (e) => {
     e.preventDefault();
     if (title.trim()) {
-      dispatch(addTask({ title }));
-      setTitle("");
+      try {
+        await dispatch(addTask({ title })).unwrap();
+        toast.success("✅ Task added!");
+        setTitle("");
+      } catch (err) {
+        toast.error("❌ Failed to add task.");
+      }
     }
   };
 
-  const handleToggle = (id) => dispatch(toggleTask(id));
-  const handleDelete = (id) => dispatch(deleteTask(id));
+  const handleToggle = async (id) => {
+    try {
+      await dispatch(toggleTask(id)).unwrap();
+      toast.success("✅ Task updated!");
+    } catch {
+      toast.error("❌ Failed to update task.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteTask(id)).unwrap();
+      toast.success("🗑️ Task deleted!");
+    } catch {
+      toast.error("❌ Failed to delete task.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -60,7 +81,7 @@ const Home = () => {
                 key={task._id}
                 className={`flex justify-between items-center px-4 py-2 rounded-md border ${
                   task.completed
-                    ? "bg-gray-100 border-gray-300"
+                    ? "bg-green-100 border-green-300"
                     : "bg-white border-gray-200"
                 } shadow-sm`}
               >
